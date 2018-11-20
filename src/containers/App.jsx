@@ -65,7 +65,7 @@ class App extends React.Component {
         <div>
           <TableHeader />
           <TableBody repos={repos} checkboxHandle={this.handleChange} selected={selected} />
-          <Chart />
+          <Chart selected={selected} />
         </div>
       );
     } else {
