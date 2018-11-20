@@ -1,0 +1,9 @@
+.table-body {
+  border-top: 1px solid #000;
+  transition: all .3s;
+  background-color: #eee;
+}
+
+.table-body-checked {
+  background-color: #ccc;
+}
