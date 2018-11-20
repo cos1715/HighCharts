@@ -44,10 +44,7 @@ class Chart extends React.Component {
         }
       },
       series: series
-    }
-
-    console.log(series, options);
-
+    };
 
     return (
       <HighchartsReact
