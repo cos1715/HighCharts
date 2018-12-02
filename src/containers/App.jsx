@@ -1,4 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { reposSelected, reposFetched } from '../actions/';
 
 import TableHeader from '../components/TableHeader';
 import TableBody from '../components/TableBody';
@@ -9,40 +13,23 @@ import MDSpinner from 'react-md-spinner';
 import './App.css';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      repos: '',
-      selected: []
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   componentDidMount() {
     this.getData();
   }
 
-  async getData() {
-    try {
-      const data = await fetch(
-        'https://api.github.com/search/repositories?q=react'
-      );
-      const elements = await data.json();
-      const repos = elements.items.splice(0, 5);
-
-      this.setState(() => {
-        return {
-          repos: repos
-        };
-      });
-    } catch (error) {
-      console.error(error);
-    }
+  getData() {
+    const { reposFetched } = this.props;
+    const api = 'https://api.github.com/search/repositories?q=react';
+    reposFetched(api);
   }
 
   handleChange = (event, element) => {
-    const { selected } = this.state;
-    const selectedArr = selected.slice();
+    const { repos, reposSelected } = this.props;
+    const selectedArr = repos.selected.slice();
 
     if (event.target.checked) {
       selectedArr.push(element);
@@ -51,21 +38,18 @@ class App extends React.Component {
       const index = selectedArr.indexOf(element);
       selectedArr.splice(index, 1);
     }
-    this.setState(() => {
-      return {
-        selected: selectedArr
-      };
-    });
+    reposSelected(selectedArr);
   }
 
   render() {
-    const { repos, selected } = this.state;
-    if (repos) {
+    const { repos } = this.props;
+
+    if (repos.fethedRepos) {
       return (
         <div>
           <TableHeader />
-          <TableBody repos={repos} checkboxHandle={this.handleChange} selected={selected} />
-          <Chart selected={selected} />
+          <TableBody repos={repos.fethedRepos} checkboxHandle={this.handleChange} selected={repos.selected} />
+          <Chart selected={repos.selected} />
         </div>
       );
     } else {
@@ -78,4 +62,17 @@ class App extends React.Component {
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    repos: state.repos
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    reposSelected: reposSelected,
+    reposFetched: reposFetched
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

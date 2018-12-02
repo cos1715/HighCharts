@@ -3,10 +3,8 @@ import React from 'react';
 import './TableBody.css';
 
 class TableBody extends React.Component {
-  renderRows(repos) {
-    const { checkboxHandle, selected } = this.props;
-
-
+  renderRows() {
+    const { repos, checkboxHandle, selected } = this.props;
 
     return repos.map((element, index) => (
       <div className={selected.includes(element) ? "table table-body table-body-checked" : "table table-body"} key={index}>
@@ -25,10 +23,7 @@ class TableBody extends React.Component {
   }
 
   render() {
-    const { repos } = this.props;
-    return (
-      this.renderRows(repos)
-    );
+    return this.renderRows();
   }
 }
 
